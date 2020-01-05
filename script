@@ -1,0 +1,135 @@
+//training data script
+\*
+  #display feature maps in rectified
+  with tf.variable_scope('Rectified_Linear_Unit'):
+	r_min = tf.reduce_min(rectified)
+	r_max = tf.reduce_max(rectified)
+	rectified_value = (rectified - r_min)/(r_max - r_min)
+
+	#image summary formar
+	rectified_transpose = tf.transpose(rectified_value, [3, 0, 1, 2])
+	
+	#display random 3 filter
+	tf.summary.image('rectified/filters2', rectified_transpose, max_outputs = 3)*/
+
+
+
+
+
+python train.py --data_url= --data_dir=wave/ --wanted_words=ha,dza,zho,tsa --how_many_training_steps=15000,3000 --learning_rate=0.001,0.001 --clip_duration_ms=1000 --sample_rate=16000
+
+first
+python train.py --data_url= --data_dir=wave/ --wanted_words=ha,dza,zho,tsa --how_many_training_steps=20000,5000 --learning_rate=0.001,0.001 --clip_duration_ms=1000 --sample_rate=16000 --model_architecture=firsty_model 
+#first stride size [1,1]
+#second stride size [2,2]
+#pool1 [2,2] [2,2]
+#pool2[3,3] [3,3]
+#fc channel = 120
+#fc channel = 100
+#depth = 186
+
+ 
+second
+python train.py --data_url= --data_dir=wave/ --wanted_words=ha,dza,zho,tsa --how_many_training_steps=20000,6000 --learning_rate=0.001,0.001 --sample_rate=16000 --clip_duration_ms=1000 --model_architecture=firsty_model
+#first stride size [2,2]
+#second stride size [3,3]
+#pool1 [3,3] [2,2]
+#pool2[6,6] [3,3]
+#fc channel = 120
+#fc channel = 100
+#depth = 128
+
+
+third
+python train.py --data_url= --data_dir=wave/ --wanted_words=ha,dza,zho,tsa --how_many_training_steps=20000,6000 --learning_rate=0.001,0.001 --sample_rate=16000 --clip_duration_ms=1000 --model_architecture=firsty_model
+#first stride size [4,4]
+#second stride size [5,5]
+#pool1 [4,4] [2,2]
+#pool2[6,6] [4,4]
+#fc channel = 120
+#fc channel = 100
+#depth = 64
+
+
+fourth
+python train.py --data_url= --data_dir=wave/ --wanted_words=ha,dza,zho,tsa --how_many_training_steps=20000,6000 --learning_rate=0.001,0.001 --sample_rate=16000 --clip_duration_ms=1000 --model_architecture=firsty_model
+#first stride size [3,3]
+#second stride size [3,3]
+#pool1 [3,3] [3,3]
+#pool2[4,4] [2,2]
+#fc channel = 120
+#fc channel = 100
+#depth = 128
+
+
+
+
+//looking the progress of the training
+
+tensorboard --logdir /tmp/retrain_logs
+
+
+
+/*import tensorflow.examples.speech_commands.input_data as input_data
+
+//export file
+
+python freeze.py --sample_rate=16000 --clip_duration_ms=10000 --model_architecture=low_latency_conv --start_checkpoint=/tmp/speech/low_latency_conv.ckpt-26000 --output_file=/tmp/my_frozen_graph.pb --wanted_words=zaa,haa1,dhod,zho1
+
+
+
+bazel run tensorflow/examples/speech_commands/freeze -- \
+--sample_rate=16000 --dct_coefficient_count=40 --window_size_ms=20 \
+--window_stride_ms=10 --clip_duration_ms=1000 \
+--model_architecture=conv \
+--start_checkpoint=/tmp/speech_commands_train/conv.ckpt-100 \
+--output_file=/tmp/my_frozen_graph.pb
+
+
+
+bazel run tensorflow/examples/speech_commands/freeze -- \
+--start_checkpoint=/tmp/speech_commands_train/conv.ckpt-100 \
+--output_file=/tmp/my_frozen_graph.pb
+
+
+python tensorflow/examples/speech_commands/freeze.py \
+--start_checkpoint=/tmp/speech_commands_train/low_latency_conv.ckpt-26000 \
+--output_file=/tmp/my_frozen_graph.pb \
+--wanted_words=zaa,haa1,dhod,zho1
+
+
+
+python label_wav.py \
+--graph=/tmp/makhraj.pb \
+--labels=/tmp/speech_commands_train/firsty_model_labels.txt \
+--wav=wave/ha/A7_nohash_1.wav
+
+bazel run tensorflow/examples/wav_to_spectrogram:wav_to_spectrogram
+--input_wav= /home/ummie_zan/tensorflow/tensorflow/examples/speech_commands/wave/ha/A1_nohash_0.wav
+--output_png=/tmp/spectogram.png
+
+
+
+
+bazel run tensorflow/examples/wav_to_spectrogram:wav_to_spectrogram -- \
+--input_wav=/tmp/ha/A1_nohash_0.wav \
+--window_size=256 \
+--stride=128 \
+--brightness=64.000000000000 \
+--output_png="/tmp/spectrogram.png"
+
+
+bazel-bin/tensorflow/examples/wav_to_spectrogram/wav_to_spectrogram \
+--input_wav=/tmp/ha/A1_nohash_0.wav \
+--window=1024 \
+--stride=512 \
+-brightness=100.0000000 \
+--output_image=/tmp/my_spectrogram.png
+
+
+
+
+bazel-bin/tensorflow/examples/wav_to_spectrogram/wav_to_spectrogram \
+--input_wav=/tmp/ha/A1_nohash_0.wav \
+--output_image=/tmp/my_spectrogram.png
+

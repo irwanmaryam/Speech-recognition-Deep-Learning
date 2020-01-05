@@ -1,0 +1,6 @@
+bazel build tensorflow/examples/wav_to_spectrogram \
+--input_wav=/tmp/ha/A1_nohash_0.wav \
+--window=1024 \
+--stride=512 \
+-brightness=100.0000000 \
+--output_image=/tmp/my_spectrogram.png
